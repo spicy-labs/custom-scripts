@@ -1,5 +1,6 @@
 const JSON_VAR_NAME = "json_data";
-const IMAGE_VAR_NAMES = ["Headline", "Product"];
+const IMAGE_VAR_NAMES = ["Headline", "Pattern1", "Product"];
+const IMAGE_VAR_SUFFIX = "_Path";
 
 const imageSelectionData = JSON.parse(getTextVariableValue(JSON_VAR_NAME));
 
@@ -16,17 +17,17 @@ for (const imageVarName of IMAGE_VAR_NAMES) {
     throw Error(`No data found for image variable: ${imageVarName}`);
   }
 
-  const { dependencies, data } = isdImageVariable;
+  const { dependantVariables, data } = isdImageVariable;
 
-  if (!dependencies || !data) {
+  if (!dependantVariables || !data) {
     throw Error(
       `Something went wrong no dependancies or data for: ${imageVarName}`,
     );
   }
 
-  console.log(dependencies);
+  console.log(dependantVariables);
 
-  const compositeKey = getCompositeKeyFromVariables(dependencies);
+  const compositeKey = getCompositeKeyFromVariables(dependantVariables);
 
   const result = data[compositeKey];
 
@@ -40,10 +41,13 @@ for (const imageVarName of IMAGE_VAR_NAMES) {
 
   const { path, imageName } = result;
 
-  setVariableValue(imageVarName + "_Path", path);
+  setVariableValue(imageVarName + IMAGE_VAR_SUFFIX, path);
   setVariableValue(imageVarName, imageName);
 }
 
 function getCompositeKeyFromVariables(dependencies) {
-  return dependencies.map((dep) => `${dep}:${getVariableValue(dep)}`).join("|");
+  return Object.keys(dependencies)
+    .filter((key) => dependencies[key])
+    .map((dep) => `${dep}:${getVariableValue(dep)}`)
+    .join("|");
 }
