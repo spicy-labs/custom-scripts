@@ -41,13 +41,27 @@ for (const imageVarName of IMAGE_VAR_NAMES) {
 
   const { path, imageName } = result;
 
-  setVariableValue(imageVarName + IMAGE_VAR_SUFFIX, path);
-  setVariableValue(imageVarName, imageName);
+  if (
+    getVariableValue(imageVarName) != imageName &&
+    getVariableValue(imageVarName + IMAGE_VAR_SUFFIX) != path
+  ) {
+    setVariableValue(imageVarName + IMAGE_VAR_SUFFIX, path);
+    setVariableValue(imageVarName, imageName);
+  }
 }
 
 function getCompositeKeyFromVariables(dependencies) {
   return Object.keys(dependencies)
     .filter((key) => dependencies[key])
-    .map((dep) => `${dep}:${getVariableValue(dep)}`)
+    .map((dep) => {
+      const variableRawValue = getVariableValue(dep);
+      const variableValue =
+        typeof variableRawValue == "boolean"
+          ? variableRawValue
+            ? "TRUE"
+            : "FALSE"
+          : variableRawValue;
+      return `${dep}:${variableValue}`;
+    })
     .join("|");
 }
