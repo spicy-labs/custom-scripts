@@ -1,58 +1,61 @@
-const JSON_VAR_NAME = "json_data";
-const IMAGE_VAR_NAMES = ["Headline", "Pattern1", "Product"];
-const IMAGE_VAR_SUFFIX = "_Path";
+const JSON_VAR_NAME = "json_data"; // name of the variable that holds the json
+const IMAGE_VAR_NAMES = []; // name of your image variables like "Headline", "Pattern1", "Product"
+const IMAGE_VAR_SUFFIX = "_Path"; // Name of the suffix for the image path
 
 const imageSelectionData = JSON.parse(getTextVariableValue(JSON_VAR_NAME));
 
-const isdLayout = imageSelectionData[getSelectedLayoutName()];
+const layout = imageSelectionData[getSelectedLayoutName()];
 
-if (!isdLayout) {
+if (!layout) {
   throw Error(`No data found for layout: ${getSelectedLayoutName()}`);
 }
 
 for (const imageVarName of IMAGE_VAR_NAMES) {
-  const isdImageVariable = isdLayout[imageVarName];
+  const imageVariableDependancies = layout[imageVarName];
 
-  if (!isdImageVariable) {
+  if (!imageVariableDependancies) {
     throw Error(`No data found for image variable: ${imageVarName}`);
   }
 
-  const { dependantVariables, data } = isdImageVariable;
+  console.log(imageVarName + "---------------");
 
-  if (!dependantVariables || !data) {
-    throw Error(
-      `Something went wrong no dependancies or data for: ${imageVarName}`,
-    );
+  const dependancies = Object.keys(imageVariableDependancies);
+
+  if (dependancies.length == 0) {
+    throw Error(`Something went wrong no dependancies for: ${imageVarName}`);
   }
 
-  console.log(dependantVariables);
+  let variableMatch = null;
 
-  const compositeKey = getCompositeKeyFromVariables(dependantVariables);
+  for (const dependant of dependancies) {
+    if (variableMatch != null) continue;
 
-  const result = data[compositeKey];
-
-  if (!result) {
-    throw Error(
-      `No result for the following order of variables with values:${compositeKey}`,
-    );
+    console.log(dependant);
+    const compositeKey = getCompositeKeyFromVariables(dependant.split("|"));
+    variableMatch = imageVariableDependancies[dependant][compositeKey];
+    console.log(compositeKey);
   }
 
-  console.log(result);
+  if (!variableMatch) {
+    throw Error(`Something went wrong no match found for: ${imageVarName}`);
+  }
 
-  const { path, imageName } = result;
+  console.log(variableMatch);
+
+  const { path, imageName } = variableMatch;
 
   if (
-    getVariableValue(imageVarName) != imageName &&
+    getVariableValue(imageVarName) != imageName ||
     getVariableValue(imageVarName + IMAGE_VAR_SUFFIX) != path
   ) {
+    console.log("Setting Variables");
     setVariableValue(imageVarName + IMAGE_VAR_SUFFIX, path);
     setVariableValue(imageVarName, imageName);
   }
 }
 
 function getCompositeKeyFromVariables(dependencies) {
-  return Object.keys(dependencies)
-    .filter((key) => dependencies[key])
+  return dependencies
     .map((dep) => {
       const variableRawValue = getVariableValue(dep);
       const variableValue =
