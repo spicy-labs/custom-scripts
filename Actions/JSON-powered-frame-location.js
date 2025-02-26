@@ -1,55 +1,55 @@
-const json_var_name = "json_data_sizing"; // name of the variable that holds the json
-const frame_names = ["product1"]; // name of your image frames like "headline", "pattern1", "product"
+const JSON_VAR_NAME = "json_data_sizing"; // name of the variable that holds the json
+const FRAME_NAMES = ["Product1"]; // name of your image frames like "Headline", "Pattern1", "Product"
 
-const imageselectiondata = json.parse(gettextvariablevalue(json_var_name));
+const imageSelectionData = JSON.parse(getTextVariableValue(JSON_VAR_NAME));
 
-const layout = imageselectiondata[getselectedlayoutname()];
+const layout = imageSelectionData[getSelectedLayoutName()];
 
 if (!layout) {
-  throw error(`no data found for layout: ${getselectedlayoutname()}`);
+  throw Error(`No data found for layout: ${getSelectedLayoutName()}`);
 }
 
 const errors = [];
 
-for (const framename of frame_names) {
+for (const frameName of FRAME_NAMES) {
   try {
-    const imagevariabledependancies = layout[framename];
+    const imageVariableDependancies = layout[frameName];
 
-    console.log(framename + "---------------");
+    console.log(frameName + "---------------");
 
-    if (!imagevariabledependancies) {
-      throw error(`no data found for image variable: ${framename}`);
+    if (!imageVariableDependancies) {
+      throw Error(`No data found for image variable: ${frameName}`);
     }
 
-    const dependancies = object.keys(imagevariabledependancies);
+    const dependancies = Object.keys(imageVariableDependancies);
 
     if (dependancies.length == 0) {
-      throw error(`something went wrong no dependancies for: ${framename}`);
+      throw Error(`Something went wrong no dependancies for: ${frameName}`);
     }
 
-    let variablematch = null;
+    let variableMatch = null;
 
     for (const dependant of dependancies) {
-      if (variablematch != null) continue;
+      if (variableMatch != null) continue;
 
       console.log(dependant);
-      const compositekey = getcompositekeyfromvariables(dependant.split("|"));
-      variablematch = imagevariabledependancies[dependant][compositekey];
-      console.log(compositekey);
+      const compositeKey = getCompositeKeyFromVariables(dependant.split("|"));
+      variableMatch = imageVariableDependancies[dependant][compositeKey];
+      console.log(compositeKey);
     }
 
-    if (!variablematch) {
-      throw error(`something went wrong no match found for: ${framename}`);
+    if (!variableMatch) {
+      throw Error(`Something went wrong no match found for: ${frameName}`);
     }
 
-    console.log(variablematch);
+    console.log(variableMatch);
 
-    const { x, y, w, h } = variablematch;
+    const { x, y, w, h } = variableMatch;
 
-    setframex(framename, extractnumber(x));
-    setframey(framename, extractnumber(y));
-    setframewidth(framename, extractnumber(w));
-    setframeheight(framename, extractnumber(h));
+    setFrameX(frameName, extractNumber(x));
+    setFrameY(frameName, extractNumber(y));
+    setFrameWidth(frameName, extractNumber(w));
+    setFrameHeight(frameName, extractNumber(h));
   } catch (e) {
     console.log(e.message);
     errors.push(e);
@@ -60,22 +60,22 @@ if (errors.length > 0) {
   throw errors[0];
 }
 
-function extractnumber(measurement) {
+function extractNumber(measurement) {
   const match = measurement.match(/-?\d*\.?\d+/);
-  return match ? parsefloat(match[0]) : null;
+  return match ? parseFloat(match[0]) : null;
 }
 
-function getcompositekeyfromvariables(dependencies) {
+function getCompositeKeyFromVariables(dependencies) {
   return dependencies
     .map((dep) => {
-      const variablerawvalue = getvariablevalue(dep);
-      const variablevalue =
-        typeof variablerawvalue == "boolean"
-          ? variablerawvalue
-            ? "true"
-            : "false"
-          : variablerawvalue;
-      return `${dep}:${variablevalue}`;
+      const variableRawValue = getVariableValue(dep);
+      const variableValue =
+        typeof variableRawValue == "boolean"
+          ? variableRawValue
+            ? "TRUE"
+            : "FALSE"
+          : variableRawValue;
+      return `${dep}:${variableValue}`;
     })
     .join("|");
 }
