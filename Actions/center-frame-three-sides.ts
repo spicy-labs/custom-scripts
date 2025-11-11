@@ -178,50 +178,6 @@ function getFrameMargin(frameDistances: FrameDistances, log = false) {
   }
 }
 
-/** 
-function findFrameMargin(frameDistances: FrameDistances) {
-  // Type safety ensures frameDistances always has exactly 4 defined values
-
-  // frameDistances format: [top, left, bottom, right]
-  const [top, left, bottom, right] = frameDistances;
-
-  // Find the maximum distance
-  const maxDistance = Math.max(top, left, bottom, right);
-
-  // Determine which side has the max distance and get the opposite side + other two sides
-  let oppositeSide: number;
-  let otherTwo: number[];
-
-  if (maxDistance === top) {
-    oppositeSide = bottom;
-    otherTwo = [left, right];
-  } else if (maxDistance === bottom) {
-    oppositeSide = top;
-    otherTwo = [left, right];
-  } else if (maxDistance === left) {
-    oppositeSide = right;
-    otherTwo = [top, bottom];
-  } else {
-    // maxDistance === right
-    oppositeSide = left;
-    otherTwo = [top, bottom];
-  }
-
-  // Check if the other two sides are the same value (within 2 decimal places)
-  // @ts-ignore
-  const areSame = Math.abs(otherTwo[0] - otherTwo[1]) < 0.01;
-
-  if (areSame) {
-    // If they are the same, return that value as the margin
-    return otherTwo[0] as number;
-  } else {
-    // Otherwise, take the average of all three sides (opposite + other two)
-    // @ts-ignore
-    return (oppositeSide + otherTwo[0] + otherTwo[1]) / 3;
-  }
-}
-  */
-
 function getFrameDistancesToPageEdge(
   frameName: string,
   log = true,
