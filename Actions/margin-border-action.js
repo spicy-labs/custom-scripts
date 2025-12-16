@@ -12,10 +12,13 @@ const rightAlignedVerticals = ["Margin_Right"];
 // 4. Margins that grow in HEIGHT and must SHIFT UP (Move Y needed)
 const bottomAlignedHorizontals = ["Margin_Bottom"];
 
+// 5. The special corner frame
+const cornerFrameName = "Corner";
+
 // =================================================
 
 // 1. Get the previous thickness from the static Corner frame
-const oldThickness = getFrameWidth("Corner");
+const oldThickness = getFrameWidth(cornerFrameName);
 
 // 2. REFERENCE CHECK: We still use specific margins to detect the scale change.
 const currentMarginWidth = getFrameWidth("Margin_Left");
@@ -73,7 +76,7 @@ for (let i = 0; i < bottomAlignedHorizontals.length; i++) {
 }
 
 // 10. Update the Corner
-setFrameWidth("Corner", targetThickness);
-setFrameHeight("Corner", targetThickness);
-setFrameX("Corner", 0);
-setFrameY("Corner", 0);
+setFrameWidth(cornerFrameName, targetThickness);
+setFrameHeight(cornerFrameName, targetThickness);
+setFrameX(cornerFrameName, 0);
+setFrameY(cornerFrameName, 0);
