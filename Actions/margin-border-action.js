@@ -7,7 +7,7 @@ const leftAlignedVerticals = ["Margin_Left"];
 const topAlignedHorizontals = ["Margin_Top"];
 
 // 3. Margins that grow in WIDTH and must SHIFT LEFT (Move X needed)
-const rightAlignedVerticals = ["Margin_Right", "Margin_Middle_01", "Margin_Middle_02"];
+const rightAlignedVerticals = ["Margin_Right"];
 
 // 4. Margins that grow in HEIGHT and must SHIFT UP (Move Y needed)
 const bottomAlignedHorizontals = ["Margin_Bottom"];
