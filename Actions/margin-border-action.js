@@ -1,15 +1,15 @@
 // ================= CONFIGURATION =================
 
-// 1. Margins that grow in WIDTH but stay anchored to the LEFT (No move needed)
-const leftAlignedVerticals = ["Margin_Left"];
+// 1. Margin that grows in WIDTH but stays anchored to the LEFT (Single Value)
+const leftAlignedVertical = "Margin_Left";
 
-// 2. Margins that grow in HEIGHT but stay anchored to the TOP (No move needed)
-const topAlignedHorizontals = ["Margin_Top"];
+// 2. Margin that grows in HEIGHT but stays anchored to the TOP (Single Value)
+const topAlignedHorizontal = "Margin_Top";
 
-// 3. Margins that grow in WIDTH and must SHIFT LEFT (Move X needed)
+// 3. Margins that grow in WIDTH and must SHIFT LEFT (Still an Array)
 const rightAlignedVerticals = ["Margin_Right"];
 
-// 4. Margins that grow in HEIGHT and must SHIFT UP (Move Y needed)
+// 4. Margins that grow in HEIGHT and must SHIFT UP (Still an Array)
 const bottomAlignedHorizontals = ["Margin_Bottom"];
 
 // 5. The special corner frame
@@ -20,9 +20,9 @@ const cornerFrameName = "Corner";
 // 1. Get the previous thickness from the static Corner frame
 const oldThickness = getFrameWidth(cornerFrameName);
 
-// 2. REFERENCE CHECK: We still use specific margins to detect the scale change.
-const currentMarginWidth = getFrameWidth("Margin_Left");
-const currentMarginHeight = getFrameHeight("Margin_Top");
+// 2. REFERENCE CHECK: Use the single variables defined above
+const currentMarginWidth = getFrameWidth(leftAlignedVertical);
+const currentMarginHeight = getFrameHeight(topAlignedHorizontal);
 
 // 3. Calculate the Delta (Difference)
 const deltaWidth = Math.abs(currentMarginWidth - oldThickness);
@@ -43,15 +43,11 @@ const thicknessDifference = targetThickness - oldThickness;
 
 // ================= APPLYING CHANGES =================
 
-// 6. Loop: Left Aligned Verticals (Set Width Only)
-for (let i = 0; i < leftAlignedVerticals.length; i++) {
-    setFrameWidth(leftAlignedVerticals[i], targetThickness);
-}
+// 6. Left Aligned Vertical (Set Width Only - No Loop)
+setFrameWidth(leftAlignedVertical, targetThickness);
 
-// 7. Loop: Top Aligned Horizontals (Set Height Only)
-for (let i = 0; i < topAlignedHorizontals.length; i++) {
-    setFrameHeight(topAlignedHorizontals[i], targetThickness);
-}
+// 7. Top Aligned Horizontal (Set Height Only - No Loop)
+setFrameHeight(topAlignedHorizontal, targetThickness);
 
 // 8. Loop: Right Aligned Verticals (Set Width + Adjust X)
 for (let i = 0; i < rightAlignedVerticals.length; i++) {
