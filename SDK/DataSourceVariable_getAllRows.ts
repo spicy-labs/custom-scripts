@@ -3,10 +3,8 @@ import {
   type EngineDataItem,
 } from '@chili-publish/studio-sdk';
 
-const PAGE_SIZE = 100;
-const MAX_PAGES = 200; // safety cap against a connector that never ends
 
-export async function getAllRows(variableId: string): Promise<EngineDataItem[]> {
+export async function getAllRows(variableId: string, options = {pageSize:100, maxPages: 200}): Promise<EngineDataItem[]> {
   const sdk = window.SDK;
   if (!sdk) throw new Error('window.SDK is not initialised');
 
@@ -34,9 +32,9 @@ export async function getAllRows(variableId: string): Promise<EngineDataItem[]> 
     const seenTokens = new Set<string>();
     let continuationToken: string | null = null;
 
-    for (let page = 0; page < MAX_PAGES; page++) {
+    for (let page = 0; page < maxPages; page++) {
       const res = await sdk.dataConnector.getPage(source.connectorId, {
-        limit: PAGE_SIZE,
+        limit: pageSize,
         continuationToken,
       });
       if (!res.success) {
@@ -52,7 +50,7 @@ export async function getAllRows(variableId: string): Promise<EngineDataItem[]> 
       }
       seenTokens.add(continuationToken);
     }
-    throw new Error(`Gave up after ${MAX_PAGES} pages`);
+    throw new Error(`Gave up after ${maxPages} pages`);
   }
 
   return [];
